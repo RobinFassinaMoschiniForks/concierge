@@ -1,17 +1,17 @@
 import json
 import streamlit as st
-from concierge_streamlit_lib.collections import EnsureCollections, GetExistingCollectionCached, CreateCollectionWidget, DropCollection, COLLECTIONS
-from concierge_streamlit_lib.status import SidebarStatus
+from concierge_streamlit_lib.collections import ensure_collections, get_existing_collection_cached, create_collection_widget, drop_collection, COLLECTIONS
+from concierge_streamlit_lib.status import sidebar_status
 
 st.set_page_config(page_title="Concierge AI: Collection Management", layout="wide")
 
 # ---- first run only ----
 
-EnsureCollections()
+ensure_collections()
 
 # ---- main loop ----
 
-SidebarStatus()
+sidebar_status()
 
 site_list = []
 array_counter = {}
@@ -27,7 +27,7 @@ if selected_collection:
     st.write('# Collections Manager')
     # CreateCollectionWidget()
     try:
-        collection = GetExistingCollectionCached(selected_collection)
+        collection = get_existing_collection_cached(selected_collection)
     except:
         collection = ''
     
@@ -125,7 +125,7 @@ if selected_collection:
                 # put the delete button on the page
                 #
                 #
-                st.button("delete collection", key=f"delete_{selected_collection}", on_click=DropCollection, args=[selected_collection])
+                st.button("delete collection", key=f"delete_{selected_collection}", on_click=drop_collection, args=[selected_collection])
 
 
     else:
@@ -134,10 +134,10 @@ if selected_collection:
 else:
     st.write('# Collections Manager')
 
-    CreateCollectionWidget()
+    create_collection_widget()
 
     for collection_name in st.session_state[COLLECTIONS]:
-        collection = GetExistingCollectionCached(collection_name)
+        collection = get_existing_collection_cached(collection_name)
 
         with st.container(border=1):
             col1, col2 = st.columns(2)
@@ -146,4 +146,4 @@ else:
                 st.write("<span data-toggle='tooltip' title='Entity count refers to the number of references created in the collection'>Entity count</span>: ", collection.num_entities, unsafe_allow_html=True)
                 
             with col2:
-                st.button("delete collection", key=f"delete_{collection_name}", on_click=DropCollection, args=[collection_name])
+                st.button("delete collection", key=f"delete_{collection_name}", on_click=drop_collection, args=[collection_name])
